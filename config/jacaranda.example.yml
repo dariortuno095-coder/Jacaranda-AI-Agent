@@ -1,0 +1,190 @@
+# Jacaranda AI Agent Configuration
+# This is an example configuration file for production deployment
+
+jacaranda:
+  # Core API Configuration
+  api:
+    port: 8000
+    host: 0.0.0.0
+    workers: 4
+    timeout: 30
+    max_connections: 1000
+    enable_cors: true
+    cors_origins:
+      - https://yourdomain.com
+      - https://app.yourdomain.com
+
+  # WhatsApp Business API Integration
+  whatsapp:
+    account_sid: your_twilio_account_sid_here
+    auth_token: your_twilio_auth_token_here
+    phone_number: "+34XXXXXXXXX"
+    webhook_url: https://yourdomain.com/whatsapp/webhook
+    webhook_verify_token: your_secure_verification_token
+    message_retry_attempts: 3
+    message_timeout_seconds: 60
+    enable_media_support: true
+    max_message_size_mb: 100
+
+  # AI Model Configuration
+  ai:
+    # Available models: jacaranda-lite, jacaranda-pro, jacaranda-pro-v2, custom
+    model: jacaranda-pro-v2
+    language: auto  # auto-detect or specific: en, es, fr, de, it
+    confidence_threshold: 0.85
+    enable_learning: true
+    learning_rate: 0.01
+    batch_size: 32
+    max_context_tokens: 2048
+    temperature: 0.7  # 0.0 = deterministic, 1.0 = creative
+    top_p: 0.95
+
+  # Database Configuration
+  storage:
+    type: postgresql  # postgresql, mysql, mongodb
+    connection_string: postgresql://user:password@localhost:5432/jacaranda
+    pool_size: 20
+    max_overflow: 40
+    pool_recycle: 3600
+    connection_timeout: 10
+    ssl_mode: require  # disable, allow, prefer, require
+    backup_enabled: true
+    backup_interval_hours: 24
+    backup_retention_days: 30
+
+  # Redis Cache Configuration
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
+    db: 0
+    password: null  # Set password if required
+    ssl: false
+    ttl_seconds: 3600
+    max_connections: 100
+
+  # Security Configuration
+  security:
+    api_key_rotation_days: 90
+    enable_two_factor: true
+    jwt_secret: your_jwt_secret_key_here_min_32_chars
+    jwt_expiration_hours: 24
+    bcrypt_rounds: 12
+    rate_limit_requests: 1000
+    rate_limit_window_minutes: 1
+    allowed_ip_addresses:
+      - 192.168.1.0/24
+      - 10.0.0.0/8
+    enable_encryption_at_rest: true
+    encryption_algorithm: AES-256
+    tls_cert_path: /etc/ssl/certs/yourdomain.crt
+    tls_key_path: /etc/ssl/private/yourdomain.key
+
+  # Workflow Engine Configuration
+  workflows:
+    max_parallel_workflows: 500
+    execution_timeout_seconds: 300
+    retry_policy: exponential
+    retry_max_attempts: 3
+    enable_dry_run: true
+    enable_workflow_versioning: true
+    audit_logging: true
+
+  # Logging Configuration
+  logging:
+    level: INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+    format: json  # json or text
+    output: file  # file, stdout, both
+    log_file: /var/log/jacaranda/app.log
+    max_file_size_mb: 500
+    backup_count: 10
+    enable_request_logging: true
+    enable_response_logging: false  # Security - disable in production
+    exclude_paths:
+      - /health
+      - /status
+
+  # Monitoring & Observability
+  monitoring:
+    enable_metrics: true
+    metrics_port: 9090
+    metrics_path: /metrics
+    enable_tracing: true
+    trace_sample_rate: 0.1  # 10% of requests
+    enable_health_checks: true
+    health_check_interval_seconds: 30
+    alert_email: ops@yourdomain.com
+    slack_webhook: https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+  # Email Configuration for Notifications
+  email:
+    smtp_server: smtp.gmail.com
+    smtp_port: 587
+    smtp_username: your_email@gmail.com
+    smtp_password: your_app_password
+    from_address: noreply@yourdomain.com
+    from_name: Jacaranda AI
+    enable_tls: true
+    enable_ssl: false
+    timeout_seconds: 10
+
+  # Integrations with External Services
+  integrations:
+    # CRM Integration
+    crm:
+      type: salesforce  # salesforce, hubspot, pipedrive
+      api_key: your_crm_api_key
+      api_url: https://api.salesforce.com/v1
+      sync_interval_minutes: 5
+      enable_bidirectional_sync: true
+    
+    # Payment Gateway
+    payment:
+      provider: stripe  # stripe, paypal, square
+      api_key: your_payment_api_key
+      webhook_secret: your_webhook_secret
+      currency: EUR
+      enable_recurring: true
+    
+    # Analytics
+    analytics:
+      provider: mixpanel  # mixpanel, amplitude, segment
+      token: your_analytics_token
+      enable_event_tracking: true
+
+  # Feature Flags
+  features:
+    enable_advanced_ai: true
+    enable_sentiment_analysis: true
+    enable_anomaly_detection: true
+    enable_predictive_analytics: true
+    enable_custom_models: true
+    enable_api_v2: true
+    beta_features: false
+
+  # Performance Tuning
+  performance:
+    enable_caching: true
+    cache_ttl_seconds: 300
+    enable_compression: true
+    compression_level: 6
+    enable_request_batching: true
+    batch_timeout_ms: 100
+    enable_query_optimization: true
+    connection_pooling: true
+
+  # Environment
+  environment: production  # development, staging, production
+  debug_mode: false
+  enable_test_endpoints: false
+
+# Docker Compose Override (optional)
+docker:
+  image: jacaranda-ai:latest
+  restart_policy: always
+  memory_limit: 4g
+  cpu_limit: 2.0
+  volumes:
+    - ./config:/app/config
+    - ./logs:/app/logs
+    - ./data:/app/data
